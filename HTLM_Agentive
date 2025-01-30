@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Frontend</title>
+    <!-- Simple File Upload Widget Script -->
+    <script src="https://app.simplefileupload.com/buckets/fbd1b9c69407fbc6a33275ac3e936714.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .chatbot-container {
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .chatbot-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .chatbot-messages {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+        .chatbot-input {
+            display: flex;
+            margin-top: 10px;
+        }
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .chatbot-input button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .chatbot-input button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            <h1>Chatbot</h1>
+            <p>Carica immagini e ottieni i tuoi render!</p>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <!-- Chat messages will be dynamically added here -->
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="user-input" placeholder="Scrivi un messaggio...">
+            <button id="send-message">Invia</button>
+        </div>
+    </div>
+
+    <!-- Hidden Input for File Upload -->
+    <input type="hidden" id="user_avatar_url" name="user[avatar_url]" class="simple-file-upload">
+
+    <script>
+        const messagesContainer = document.getElementById('chatbot-messages');
+        const userInput = document.getElementById('user-input');
+        const sendMessageButton = document.getElementById('send-message');
+
+        // Function to add messages to the chat
+        function addMessage(sender, text) {
+            const message = document.createElement('div');
+            message.classList.add(sender);
+            message.textContent = text;
+            messagesContainer.appendChild(message);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Event listener for sending messages
+        sendMessageButton.addEventListener('click', () => {
+            const userMessage = userInput.value;
+            if (userMessage.trim()) {
+                addMessage('user', userMessage);
+                userInput.value = '';
+
+                // Simulate bot response
+                if (userMessage.toLowerCase().includes('carica foto')) {
+                    addMessage('bot', 'Carica un file usando il box sottostante.');
+                } else {
+                    addMessage('bot', 'Sto elaborando la tua richiesta...');
+                }
+            }
+        });
+
+        // Event Listener to handle file upload
+        document.addEventListener('simple-file-upload:upload-success', function(e) {
+            const fileUrl = e.detail.url;
+            addMessage('bot', `File caricato con successo! Ecco l'URL: ${fileUrl}`);
+        });
+    </script>
+</body>
+</html>
