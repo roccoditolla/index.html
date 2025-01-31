@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Frontend</title>
-    <!-- Simple File Upload Widget Script -->
+    <title>Caricamento Immagini</title>
+    <!-- Simple File Upload Widget -->
     <script src="https://app.simplefileupload.com/buckets/fbd1b9c69407fbc6a33275ac3e936714.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,107 +16,50 @@
             min-height: 100vh;
             background-color: #f4f4f9;
         }
-        .chatbot-container {
-            width: 100%;
-            max-width: 600px;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-        }
-        .chatbot-header {
-            text-align: center;
+        h1 {
             margin-bottom: 20px;
         }
-        .chatbot-messages {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-            background: #fafafa;
+        .upload-container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .chatbot-input {
-            display: flex;
-            margin-top: 10px;
-        }
-        .chatbot-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .chatbot-input button {
-            margin-left: 10px;
-            padding: 10px 20px;
-            border: none;
-            background-color: #007BFF;
-            color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .chatbot-input button:hover {
-            background-color: #0056b3;
+        .upload-result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: green;
         }
     </style>
 </head>
 <body>
-    <div class="chatbot-container">
-        <div class="chatbot-header">
-            <h1>Chatbot</h1>
-            <p>Carica immagini e ottieni i tuoi render!</p>
-        </div>
-        <div class="chatbot-messages" id="chatbot-messages">
-            <!-- Chat messages will be dynamically added here -->
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="user-input" placeholder="Scrivi un messaggio...">
-            <button id="send-message">Invia</button>
-        </div>
+    <div class="upload-container">
+        <h1>Carica la tua immagine</h1>
+        <p>Carica un'immagine utilizzando il box sottostante. Dopo il caricamento, vedrai l'URL generato.</p>
+        <!-- Hidden Input for File Upload -->
+        <input type="hidden" id="user_avatar_url" class="simple-file-upload">
+        <div id="upload-result" class="upload-result"></div>
     </div>
 
-    <!-- Hidden Input for File Upload -->
-    <input type="hidden" id="user_avatar_url" name="user[avatar_url]" class="simple-file-upload">
-
-    <!-- Area to display the uploaded file URL -->
-    <div id="upload-result" style="margin-top: 20px; text-align: center; font-size: 16px; color: #333;"></div>
-
     <script>
-        const messagesContainer = document.getElementById('chatbot-messages');
-        const userInput = document.getElementById('user-input');
-        const sendMessageButton = document.getElementById('send-message');
-        const uploadResult = document.getElementById('upload-result');
-
-        // Function to add messages to the chat
-        function addMessage(sender, text) {
-            const message = document.createElement('div');
-            message.classList.add(sender);
-            message.textContent = text;
-            messagesContainer.appendChild(message);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        // Event listener for sending messages
-        sendMessageButton.addEventListener('click', () => {
-            const userMessage = userInput.value;
-            if (userMessage.trim()) {
-                addMessage('user', userMessage);
-                userInput.value = '';
-
-                // Simulate bot response
-                if (userMessage.toLowerCase().includes('carica foto')) {
-                    addMessage('bot', 'Carica un file usando il box sottostante.');
-                } else {
-                    addMessage('bot', 'Sto elaborando la tua richiesta...');
-                }
-            }
+        // Funzione per gestire il successo del caricamento
+        document.addEventListener('simple-file-upload:upload-success', function(e) {
+            const fileUrl = e.detail.url; // Recupera l'URL dell'immagine caricata
+            const resultContainer = document.getElementById('upload-result');
+            resultContainer.innerHTML = `
+                <p>Immagine caricata con successo!</p>
+                <p>URL: <a href="${fileUrl}" target="_blank">${fileUrl}</a></p>
+                <p>Copia l'URL e incollalo nel chatbot per continuare.</p>
+            `;
+            console.log("File caricato: ", fileUrl);
         });
 
-        // Event Listener to handle file upload
-        document.addEventListener('simple-file-upload:upload-success', function(e) {
-            const fileUrl = e.detail.url;
-            addMessage('bot', 'File caricato con successo!');
-            uploadResult.innerHTML = `URL dell'immagine caricata: <a href="${fileUrl}" target="_blank">${fileUrl}</a>`;
+        // Funzione per gestire eventuali errori
+        document.addEventListener('simple-file-upload:upload-error', function(e) {
+            const resultContainer = document.getElementById('upload-result');
+            resultContainer.innerHTML = `<p style="color: red;">Errore nel caricamento del file. Riprova.</p>`;
+            console.error("Errore durante il caricamento: ", e);
         });
     </script>
 </body>
