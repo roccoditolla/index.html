@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caricamento Immagini</title>
-    <!-- Simple File Upload Widget -->
     <script src="https://app.simplefileupload.com/buckets/fbd1b9c69407fbc6a33275ac3e936714.js"></script>
     <style>
         body {
@@ -31,6 +30,10 @@
             font-size: 16px;
             color: green;
         }
+        .upload-error {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -40,10 +43,11 @@
         <!-- Hidden Input for File Upload -->
         <input type="hidden" id="user_avatar_url" class="simple-file-upload">
         <div id="upload-result" class="upload-result"></div>
+        <div id="upload-error" class="upload-error"></div>
     </div>
 
     <script>
-        // Funzione per gestire il successo del caricamento
+        // Gestione del successo del caricamento
         document.addEventListener('simple-file-upload:upload-success', function(e) {
             const fileUrl = e.detail.url; // Recupera l'URL dell'immagine caricata
             const resultContainer = document.getElementById('upload-result');
@@ -55,10 +59,10 @@
             console.log("File caricato: ", fileUrl);
         });
 
-        // Funzione per gestire eventuali errori
+        // Gestione degli errori nel caricamento
         document.addEventListener('simple-file-upload:upload-error', function(e) {
-            const resultContainer = document.getElementById('upload-result');
-            resultContainer.innerHTML = `<p style="color: red;">Errore nel caricamento del file. Riprova.</p>`;
+            const errorContainer = document.getElementById('upload-error');
+            errorContainer.textContent = "Errore nel caricamento del file. Controlla la connessione o riprova.";
             console.error("Errore durante il caricamento: ", e);
         });
     </script>
