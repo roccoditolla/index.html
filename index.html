@@ -80,10 +80,14 @@
     <!-- Hidden Input for File Upload -->
     <input type="hidden" id="user_avatar_url" name="user[avatar_url]" class="simple-file-upload">
 
+    <!-- Area to display the uploaded file URL -->
+    <div id="upload-result" style="margin-top: 20px; text-align: center; font-size: 16px; color: #333;"></div>
+
     <script>
         const messagesContainer = document.getElementById('chatbot-messages');
         const userInput = document.getElementById('user-input');
         const sendMessageButton = document.getElementById('send-message');
+        const uploadResult = document.getElementById('upload-result');
 
         // Function to add messages to the chat
         function addMessage(sender, text) {
@@ -113,7 +117,8 @@
         // Event Listener to handle file upload
         document.addEventListener('simple-file-upload:upload-success', function(e) {
             const fileUrl = e.detail.url;
-            addMessage('bot', `File caricato con successo! Ecco l'URL: ${fileUrl}`);
+            addMessage('bot', 'File caricato con successo!');
+            uploadResult.innerHTML = `URL dell'immagine caricata: <a href="${fileUrl}" target="_blank">${fileUrl}</a>`;
         });
     </script>
 </body>
